@@ -1,26 +1,48 @@
 import robot
 import asyncio
 
-
 async def main():
+    # 初始化地圖大小為 10x10，並將機器人設定在座標 (1, 1)
     world, r = await robot.init(10, 10, 1, 1)
+    
     print("機器人開始行動")
-    # 繞場一圈
+    
+    # 調整初始朝向，準備開始縱向巡邏
     await r.turn_left()
+    
+    # 開始 S 型巡邏循環，總共執行 5 次來回（覆蓋 10 行寬度）
     for j in range(5):
+        # --- 向上前進段 ---
+        # 沿著當前列向上走到底 (9格)
         await r.walk(9)
+        
+        # 連續三個左轉等於「右轉」，準備切換到下一列
         await r.turn_left()
         await r.turn_left()
         await r.turn_left()
+        
+        # 向右移動一格，進入下一列
         await r.walk(1)
+        
+        # 再次連續三個左轉（右轉），轉向南方（準備往下走）
         await r.turn_left()
         await r.turn_left()
         await r.turn_left()
+        
+        # --- 向下返回段 ---
+        # 沿著新的一列向下走到底 (9格)
         await r.walk(9)
+        
+        # 左轉 90 度，準備移動到再下一列
         await r.turn_left()
+        
+        # 向右移動一格
         await r.walk(1)
+        
+        # 左轉 90 度，轉向北方，回到循環起點準備向上走
         await r.turn_left()
+
     print("🚩 巡邏完成！")
 
-
+# 執行非同步主程式
 await main()
